@@ -11,15 +11,17 @@ class Auth {
         setTimeout(() => {
             this.store = getStore();
 
-            this.data = this.store.getState().login.data;
+            this.data = this.store.getState().login.token;
         });    }
 
 
     login(credentials) {
         console.log('Credentials: ',credentials)
         return Http.post('/login',credentials);
-        // this._isAuthenticated=credentials
-        // return this._isAuthenticated
+    }
+
+    register(credentials){
+        return Http.post('/register',credentials)
     }
 
     isAuthenticated() {
@@ -68,7 +70,6 @@ class Auth {
 
 
     getTokenDecoded() {
-
 
         return null;
     }

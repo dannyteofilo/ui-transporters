@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Auth from 'services/AuthService';
 import { Redirect } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import { Card, CardTitle, Button, FormGroup } from 'reactstrap'
 import FormRow from 'components/form-row/FormRow'
 import { Link } from 'react-router-dom'
@@ -23,7 +24,7 @@ class Login extends Component {
         let add = {
             email: this.refs.email.getValue(),
             password: this.refs.pass.getValue(),
-            gettoken:true
+            gettoken: true
         }
         this.props.dispatch(actions.fetch(add));
         // this.refs.email.setValue(),
@@ -31,15 +32,27 @@ class Login extends Component {
 
     }
 
+    messageError(error) {
+        { Swal("Error", error.response ? error.response.data.message : error.message, "error") }
+        setTimeout(() => {
+            this.props.dispatch(actions.reset())
+        }, 1000);
+    }
+
     render() {
 
         const { from } = this.props.location.state || { from: { pathname: '/home' } }
         console.log('From:  ', from)
-        console.log('istokenExpire: ',Auth.isAuthenticated())
+        console.log('istokenExpire: ', Auth.isAuthenticated())
         if (Auth.isAuthenticated()) {
             return (
                 <Redirect to={from} />
             )
+        }
+
+        const { error,requesting } = this.props
+        if (error) {
+            this.messageError(error)
         }
         return (
             <div className="section-login">
@@ -49,20 +62,32 @@ class Login extends Component {
                         <Card>
                             <form onSubmit={this.onSubmit}>
                                 <CardTitle className="submit">Login</CardTitle>
-                                <FormRow inputType='text' labelText='Email' isRequired={true} ref='email' />
+                                <FormRow inputType='email' labelText='Email' isRequired={true} ref='email' />
                                 <FormRow inputType='password' labelText='Password' isRequired={true} ref='pass' />
                                 <FormGroup className="submit">
-                                    <Button color="primary" size="lg">Login</Button>
+                                    {
+                                        requesting &&
+                                        <Button color="primary" size="lg">
+                                            Login ...
+                                            <i className="fa fa-spin fa-sync"></i>
+                                        </Button>
+                                    }
+                                    {
+                                        !requesting &&
+                                        <Button color="primary" size="lg">
+                                            Login
+                                        </Button>
+                                    }
                                 </FormGroup>
                             </form>
 
                             <div className="link-login">
-                                <p style={{marginTop:'8px'}}>Create an account?</p>
-                            <Link
-                                to="/auth/register"
-                                className="nav-link"
-                            >
-                                Sign up
+                                <p style={{ marginTop: '8px' }}>Create an account?</p>
+                                <Link
+                                    to="/auth/register"
+                                    className="nav-link"
+                                >
+                                    Sign up
                             </Link>
                             </div>
                         </Card>
@@ -75,7 +100,7 @@ class Login extends Component {
 
 
 export default connect((store) => {
-    const { login } = store;
+    const {  login } = store;
 
     return {
         requesting: login.requesting,

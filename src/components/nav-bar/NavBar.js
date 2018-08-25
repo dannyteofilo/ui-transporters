@@ -43,7 +43,7 @@ class NavComponent extends Component {
         console.log('User: ', user)
         return (
             <div>
-                <Navbar color="info" inverse expand="md">
+                <Navbar color="info" dark expand="md">
                     <Link
                         to="/home"
                         className="navbar-brand"
@@ -66,20 +66,17 @@ class NavComponent extends Component {
                             </NavItem>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    Options
-                </DropdownToggle>
+                                    {user ? user.name : 'User'}
+                                </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem>
-                                        Option 1
-                  </DropdownItem>
-                                    <DropdownItem>
-                                        Option 2
-                  </DropdownItem>
+                                         Profile
+                                     </DropdownItem>                  
                                     <DropdownItem divider />
                                     <DropdownItem
                                         onClick={this.props.logout}>
-                                        Reset
-                  </DropdownItem>
+                                        Logout
+                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </Nav>

@@ -3,7 +3,7 @@ import * as actions from '../../redux/constants';
 const initialState = {
     requesting: false,
     error: null,
-    response: null
+    response: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
         case actions.LOGIN_REQUEST_STARTS:
             newState = {
                 ...initialState,
-                requesting: true
+                requesting: true,
             };
         break;
 
@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
         case actions.LOGIN_REQUEST_FAILED:
             newState = {
                 ...state,
-                ...action.payload,
+                ...action.payload
             };
         break;
 

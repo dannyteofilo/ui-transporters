@@ -39,6 +39,13 @@ export const fetch = (payload) => {
     }
 }
 
+export const fetchRegister = (payload) => {
+    return {
+        type: actions.LOGIN_PERFORM_REGISTER,
+        payload: payload
+    }
+}
+
 export const reset = () => {
     return {
         type: actions.LOGIN_RESET_STATE

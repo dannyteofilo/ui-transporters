@@ -6,7 +6,7 @@ import {
 
 import Auth from 'services/AuthService';
 import * as login from './actions';
-import * as actions from '../../../shared/redux/constants';
+import * as actions from 'shared/redux/constants';
 
 function* performSignIn(action) {
     try {
@@ -16,7 +16,25 @@ function* performSignIn(action) {
         
         yield put(login.success(response.data));
 
-        Auth.setToken(response.data);
+        Auth.setToken(response.data.token);
+    } catch (error) {
+        yield put(login.fails({
+            error
+        }));
+    } finally {
+        yield put(login.ends());
+    }
+}
+
+function* performSignUp(action) {
+    try {
+        yield put(login.starts());
+
+        const response = yield call(Auth.register, action.payload);
+        
+        yield put(login.success(response.data));
+
+        Auth.setToken(response.data.token);
     } catch (error) {
         yield put(login.fails({
             error
@@ -29,4 +47,5 @@ function* performSignIn(action) {
 export default function* watchSignIn() {
 
     yield takeLatest(actions.LOGIN_PERFORM_LOGIN, performSignIn);
+    yield takeLatest(actions.LOGIN_PERFORM_REGISTER, performSignUp);
 }
