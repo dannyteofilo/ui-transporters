@@ -1,0 +1,60 @@
+.section-register {
+    min-height: 100vh;
+    max-height: 1600px;
+    overflow: hidden;
+    padding: 50px 1;
+    background-position: top center;
+    background-size: cover;
+    margin: 0;
+    border: 0;
+    display: flex;
+    align-items: center;
+    background-image: url('../../login.jpg');
+}
+
+.content-register {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.register-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    /* background-color: bisque; */
+    width: 25%;
+}
+
+.card {
+    width: 100%;
+    padding: 20px;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+}
+
+.link-register {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .register-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .register-content {
+        width: 50%;
+    }
+}
+
+@media (max-width: 576px) {
+    .register-content {
+        width: 80%;
+    }
+}

@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
+import { HashRouter,Switch,Route } from 'react-router-dom'
 import logo from './logo.svg';
-import './App.css';
+import Admin from './layouts/AdminLayout'
+import Login  from './shared/login/Login'
+import Regiter from './shared/register/Register'
+import RouteSaved from 'components/hocs/RouteSaved'
+
+import { Provider } from "react-redux";
+import { getStore } from "./shared/redux/store";
 
 class App extends Component {
   render() {
+    console.log(getStore())
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <Provider store={getStore()}>
+      <div >
+      <HashRouter>
+                    <Switch>
+                        <Route path="/auth/login" component={ Login } />
+                        <Route path="/auth/register" component={ Regiter } />
+                        <RouteSaved path="/" component={ Admin } />
+                    </Switch>
+                </HashRouter>
       </div>
+      </Provider>
     );
   }
 }
