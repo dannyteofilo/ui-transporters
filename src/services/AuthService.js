@@ -11,7 +11,7 @@ class Auth {
         setTimeout(() => {
             this.store = getStore();
 
-            this.data = this.store.getState().login.token;
+            this.data = this.store.getState().login;
         });    }
 
 
@@ -24,14 +24,22 @@ class Auth {
         return Http.post('/register',credentials)
     }
 
-    isAuthenticated() {
-
-        return !this.isTokenExpired()&&this.data;
+    updateUser(user_id,credentials){
+        return Http.put(`/update-user/${user_id}`,credentials)
     }
 
-    setToken(token) {
+    isAuthenticated() {
+
+        return this.isTokenExpired();
+    }
+
+    setToken(data) {
+        // alert('aqui')
         // Saves user token to localStorage
-        this.data=token
+        console.log('This.data: ',this.data)
+        this.data.user=data.user
+        this.data.token=data.token
+        console.log('This.data: ',this.data)
     }
 
     getUser() {
@@ -51,21 +59,32 @@ class Auth {
     }
 
     isTokenExpired() {
-        try {
-            const decoded = decode(this.data.token);
-            console.log('Decode: ',decoded)
-            console.log('Decode.exp: ',decoded.exp)
-            console.log('compare: ',(Date.now() / 1000))
-            if (decoded.exp < (Date.now() / 1000)) { // Checking if token is expired. N
-                return true;
-            }else{
-                console.log('Token expired')
-                return false;
-            }
+        // try {
+            console.log('data: ',this.data)
+            if(this.data){
+                if(this.data.token){
+                    console.log('Entrabndo aqui: ',this.data)
+                const decoded = decode(this.data.token);
+                console.log('Decode: ',decoded)
+                console.log('Decode.exp: ',decoded.exp)
+                console.log('compare: ',(Date.now() / 1000))
+                if (decoded.exp < (Date.now() / 1000)) { // Checking if token is expired. N
+                    return false;
+                }else{
+                    console.log('Token expired')
+                    return true;
+                }
+                }else{
+                    return false
+                }
+        }else{
+            return false
         }
-        catch (err) {
-            return false;
-        }
+        // }
+        // catch (err) {
+        //     console.log('Entra en el catch');
+        //     return false;
+        // }
     }
 
 
@@ -75,7 +94,7 @@ class Auth {
     }
 
     logout() {
-        this.data = null;
+        this.data = {};
         this._isAuthenticated = false;
         localStorage.clear()
         return this.store.dispatch(Actions.logout());

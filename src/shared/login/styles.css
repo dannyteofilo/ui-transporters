@@ -23,7 +23,7 @@
     justify-content: center;
     flex-direction: column;
     /* background-color: bisque; */
-    width: 25%;
+    width: 30%;
 }
 
 .card {
@@ -55,6 +55,6 @@
 
 @media (max-width: 576px) {
     .login-content {
-        width: 80%;
+        width: 85%;
     }
 }
