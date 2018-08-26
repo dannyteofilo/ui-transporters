@@ -13,6 +13,7 @@ class Http {
   }
 
   request(config) {
+      console.log('request: ',config);
     return this.axios.request(config);
   }
 
@@ -44,7 +45,12 @@ class Http {
   // }
 
   post(url, data = {}, config = {}) {
-    return this.axios.post(url, data, this.getConfig(config));
+
+    console.log('Request post: ',config);
+    console.log('Data: ',data);
+    let aux=this.getConfig(config)
+    console.log('Auc: ',aux);
+    return this.axios.post(url, data, aux);
   }
 
   put(url, data = {}, config = {}) {

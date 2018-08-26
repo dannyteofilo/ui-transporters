@@ -39,7 +39,6 @@ class NavComponent extends Component {
   render() {
     const { user } = this.props;
 
-    console.log("User: ", user);
     return (
       <div>
         <Navbar color="info" dark expand="md">
@@ -80,9 +79,9 @@ class NavComponent extends Component {
 }
 
 const mapStateToProps = store => {
-  const { login } = store;
+  const { data } = store.login;
   return {
-    user: login.user ? login.user : ""
+    user: data.user ? data.user : ""
   };
 };
 

@@ -1,104 +1,99 @@
-import { getStore } from '../shared/redux/store';
-import Http from './HttpService';
-import * as Actions from '../shared/login/redux/actions';
-import decode from 'jwt-decode';
-
+import { getStore } from "../shared/redux/store";
+import Http from "./HttpService";
+import * as Actions from "../shared/login/redux/actions";
+import decode from "jwt-decode";
 
 class Auth {
+  constructor() {
+    this._isAuthenticated = false;
+    setTimeout(() => {
+      this.store = getStore();
 
-    constructor() {
-        this._isAuthenticated = false;
-        setTimeout(() => {
-            this.store = getStore();
+      this.data = this.store.getState().login.data;
+    });
+  }
 
-            this.data = this.store.getState().login;
-        });    }
+  login(credentials) {
+    console.log("Credentials: ", credentials);
+    return Http.post("/login", credentials);
+  }
 
+  register(credentials) {
+    return Http.post("/register", credentials);
+  }
 
-    login(credentials) {
-        console.log('Credentials: ',credentials)
-        return Http.post('/login',credentials);
+  updateUser(user_id, credentials) {
+    return Http.put(`/update-user/${user_id}`, credentials);
+  }
+  updateUserAvatar(user_id, credentials = null, file) {
+    let config = {};
+    let formData = new FormData();
+    formData.append("image", file);
+    config.headers = {
+      "content-type": "multipart/form-data"
+    };
+    return Http.post(`/upload-image-user/${user_id}`, formData, config);
+  }
+
+  isAuthenticated() {
+    return this.isTokenExpired();
+  }
+
+  setToken(data) {
+    this.data.user = data.user;
+    this.data.token = data.token;
+  }
+
+  getUser() {
+    if (this.isAuthenticated()) {
+      return this.data.user;
     }
 
-    register(credentials){
-        return Http.post('/register',credentials)
+    return null;
+  }
+
+  getToken() {
+    if (this.isTokenExpired()) {
+      return this.data.token;
     }
 
-    updateUser(user_id,credentials){
-        return Http.put(`/update-user/${user_id}`,credentials)
-    }
+    return null;
+  }
 
-    isAuthenticated() {
-
-        return this.isTokenExpired();
-    }
-
-    setToken(data) {
-        // alert('aqui')
-        // Saves user token to localStorage
-        console.log('This.data: ',this.data)
-        this.data.user=data.user
-        this.data.token=data.token
-        console.log('This.data: ',this.data)
-    }
-
-    getUser() {
-        if (this.isAuthenticated()) {
-            return this.data.user;
+  isTokenExpired() {
+    // try {
+    if (this.data) {
+      if (this.data.token) {
+        const decoded = decode(this.data.token);
+        if (decoded.exp < Date.now() / 1000) {
+          // Checking if token is expired. N
+          return false;
+        } else {
+          return true;
         }
-
-        return null;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
+    // }
+    // catch (err) {
+    //     console.log('Entra en el catch');
+    //     return false;
+    // }
+  }
 
-    getToken() {
-        if (this.isTokenExpired()) {
-            return this.data.token;
-        }
+  getTokenDecoded() {
+    return null;
+  }
 
-        return null;
-    }
-
-    isTokenExpired() {
-        // try {
-            console.log('data: ',this.data)
-            if(this.data){
-                if(this.data.token){
-                    console.log('Entrabndo aqui: ',this.data)
-                const decoded = decode(this.data.token);
-                console.log('Decode: ',decoded)
-                console.log('Decode.exp: ',decoded.exp)
-                console.log('compare: ',(Date.now() / 1000))
-                if (decoded.exp < (Date.now() / 1000)) { // Checking if token is expired. N
-                    return false;
-                }else{
-                    console.log('Token expired')
-                    return true;
-                }
-                }else{
-                    return false
-                }
-        }else{
-            return false
-        }
-        // }
-        // catch (err) {
-        //     console.log('Entra en el catch');
-        //     return false;
-        // }
-    }
-
-
-    getTokenDecoded() {
-
-        return null;
-    }
-
-    logout() {
-        this.data = {};
-        this._isAuthenticated = false;
-        localStorage.clear()
-        return this.store.dispatch(Actions.logout());
-    }
+  logout() {
+    this.data = {};
+    this._isAuthenticated = false;
+    localStorage.clear();
+    return this.store.dispatch(Actions.logout());
+  }
 }
 
 const auth = new Auth();
