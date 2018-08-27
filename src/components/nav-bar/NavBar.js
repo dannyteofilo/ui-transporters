@@ -49,12 +49,19 @@ class NavComponent extends Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem onClick={this.toggle}>
-                <Link to="/dashboard" className="nav-link">
-                  Dashboard
+                <Link to="/vehicles" className="nav-link">
+                  Vehicles
                 </Link>
               </NavItem>
               <NavItem>
-                <NavLink href="#">GitHub</NavLink>
+              <Link to="/drivers" className="nav-link">
+                  Drivers
+                </Link>
+              </NavItem>
+              <NavItem>
+              <Link to="/routes" className="nav-link">
+                  Routes
+                </Link>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
