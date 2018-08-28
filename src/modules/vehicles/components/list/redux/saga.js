@@ -27,5 +27,4 @@ function* performList(action) {
 export default function* watchFetch() {
 
     yield takeLatest(actions.VEHICLE_PERFORM_FETCH, performList);
-
 }

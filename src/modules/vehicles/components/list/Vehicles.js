@@ -1,15 +1,17 @@
 import React, { Component } from "react";
-import { Table } from "reactstrap";
+import { Table, Button } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
-import UpdateVehicle from '../update/FormUpdate'
+import UpdateVehicle from "../update/FormUpdate";
+import CreateVehicle from "../create/FormCreate"
 
 import "./styles.css";
 
 class Vehicles extends Component {
   constructor(props) {
     super();
+    this.hanldeCreateSuccess=this.hanldeCreateSuccess.bind(this)
   }
 
   componentWillMount() {
@@ -32,6 +34,10 @@ class Vehicles extends Component {
     }, 1000);
   }
 
+  hanldeCreateSuccess(){
+    this.props.dispatch(actions.fetch())
+  }
+
   render() {
     const { error, data } = this.props;
     console.log("Erorororororo: ", error);
@@ -44,7 +50,7 @@ class Vehicles extends Component {
           <thead>
             <tr>
               <th>Type Vehicle</th>
-              <th>Paltes</th>
+              <th>Plates</th>
               <th>Date SOAT</th>
               <th>Brand</th>
               <th>Model</th>
@@ -58,16 +64,25 @@ class Vehicles extends Component {
                 <tr key={index}>
                   <td>{value.type}</td>
                   <td>{value.plates}</td>
-                  <td>{value.date}</td>
+                  <td>{value.soat}</td>
                   <td>{value.brand}</td>
                   <td>{value.model}</td>
                   <td>{value.status}</td>
-                  <td><UpdateVehicle/></td>
+                  <td>
+                    <UpdateVehicle 
+                    profile={value} 
+                    />
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+        <div className="row btn-update">
+          <CreateVehicle
+            created={this.hanldeCreateSuccess}
+          />
+        </div>
       </div>
     );
   }
