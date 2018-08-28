@@ -1,4 +1,4 @@
-import * as actions from "../../redux/constants";
+import * as actions from "shared/redux/constants";
 
 const initialState = {
   requesting: false,
@@ -11,14 +11,14 @@ const reducer = (state = initialState, action) => {
   let newState = null;
 
   switch (action.type) {
-    case actions.LOGIN_REQUEST_STARTS:
+    case actions.AVATAR_REQUEST_STARTS:
       newState = {
         ...state,
         requesting: true
       };
       break;
 
-    case actions.LOGIN_REQUEST_SUCCESS:
+    case actions.AVATAR_REQUEST_SUCCESS:
       newState = {
         ...state,
         ...action.payload,
@@ -26,7 +26,7 @@ const reducer = (state = initialState, action) => {
       };
       break;
 
-    case actions.LOGIN_REQUEST_FAILED:
+    case actions.AVATAR_REQUEST_FAILED:
       newState = {
         ...state,
         ...action.payload,
@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
       };
       break;
 
-    case actions.LOGIN_REQUEST_ENDS:
+    case actions.AVATAR_REQUEST_ENDS:
       newState = {
         ...state,
         requesting: false,
@@ -42,19 +42,17 @@ const reducer = (state = initialState, action) => {
       };
       break;
 
-    case actions.LOGIN_LOGOUT:
-
-    case actions.LOGIN_RESET_STATE:
+    case actions.AVATAR_RESET_STATE:
       newState = { ...initialState };
       break;
 
-    case actions.LOGIN_RESET_ERROR:
-      newState = {
-        ...state,
-        error:null,
-        success:null
-      };
-      break;
+    // case actions.AVATAR_RESET_ERROR:
+    //   newState = {
+    //     ...state,
+    //     error:null,
+    //     success:null
+    //   };
+    //   break;
 
     default:
       newState = state;

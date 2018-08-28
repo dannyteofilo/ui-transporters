@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
-import login from './../login/redux/reducer'
+import loginReducer from 'modules/user/redux/reducer'
+import vehicleReducer from 'modules/vehicles/redux/reducer'
 
 const reducer =combineReducers({
-    login: login
+    login: loginReducer,
+    vehicles:vehicleReducer
 })
 
 export default reducer

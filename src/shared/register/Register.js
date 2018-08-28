@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Auth from 'services/AuthService';
 import { Redirect } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import { Card, CardTitle, Button, FormGroup } from 'reactstrap'
 import FormRow from 'components/form-row/FormRow';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from 'shared/login/redux/actions';
 
 
 
@@ -18,12 +21,20 @@ class Register extends Component {
     onSubmit(e) {
         e.preventDefault()
         let add = {
+            name: this.refs.name.getValue(),
+            lastName: this.refs.lastName.getValue(),
             email: this.refs.email.getValue(),
             password: this.refs.pass.getValue()
         }
-        this.refs.email.setValue(),
-            this.refs.pass.setValue()
+        this.props.dispatch(actions.fetchRegister(add));
 
+    }
+
+    messageError(error) {
+        { Swal("Error", error.response ? error.response.data.message : error.message, "error") }
+        setTimeout(() => {
+            this.props.dispatch(actions.reset())
+        }, 1000);
     }
 
     render() {
@@ -35,6 +46,11 @@ class Register extends Component {
                 <Redirect to={from} />
             )
         }
+        const { error, requesting } = this.props
+        if (error) {
+            this.messageError(error)
+        }
+
         return (
             <div className="section-register">
 
@@ -44,20 +60,34 @@ class Register extends Component {
                             <form onSubmit={this.onSubmit}>
                                 <CardTitle className="submit">Register</CardTitle>
                                 <FormRow inputType='text' labelText='Name' isRequired={true} ref='name' />
+                                <FormRow inputType='text' labelText='LastName' isRequired={true} ref='lastName' />
                                 <FormRow inputType='email' labelText='Email' isRequired={true} ref='email' />
                                 <FormRow inputType='password' labelText='Password' isRequired={true} ref='pass' />
                                 <FormGroup className="submit">
-                                    <Button color="primary" size="lg">Register</Button>
+
+                                    {
+                                        requesting &&
+                                        <Button color="primary" size="lg">
+                                            Register...
+                                            <i className="fa fa-spin fa-sync"></i>
+                                        </Button>
+                                    }
+                                    {
+                                        !requesting &&
+                                        <Button color="primary" size="lg">
+                                            Register
+                                        </Button>
+                                    }
                                 </FormGroup>
                             </form>
 
                             <div className="link-register">
-                                <p style={{marginTop:'8px'}}>Create an account?</p>
-                            <Link
-                                to="/auth/login"
-                                className="nav-link"
-                            >
-                                Login
+                                <p style={{ marginTop: '8px' }}>You already have an account?</p>
+                                <Link
+                                    to="/auth/login"
+                                    className="nav-link"
+                                >
+                                    Login
                             </Link>
                             </div>
                         </Card>
@@ -68,4 +98,14 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default connect((store) => {
+    const { login } = store;
+
+    return {
+        requesting: login.requesting,
+        error: login.error,
+        response: login.response,
+        token: login.token
+    }
+})(Register);
+

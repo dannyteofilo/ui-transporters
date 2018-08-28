@@ -1,58 +1,58 @@
-import * as actions from "../../redux/constants";
+import * as actions from "shared/redux/constants";
 
 const initialState = {
   requesting: false,
   error: null,
   response: null,
-  success:null
+  success: null
 };
 
 const reducer = (state = initialState, action) => {
   let newState = null;
 
   switch (action.type) {
-    case actions.LOGIN_REQUEST_STARTS:
+    case actions.VEHICLE_UPDATE_REQUEST_STARTS:
       newState = {
         ...state,
-        requesting: true
+        requesting: true,
+        error: false,
+        success: null
       };
       break;
 
-    case actions.LOGIN_REQUEST_SUCCESS:
-      newState = {
-        ...state,
-        ...action.payload,
-        success:true
-      };
-      break;
-
-    case actions.LOGIN_REQUEST_FAILED:
+    case actions.VEHICLE_UPDATE_REQUEST_SUCCESS:
       newState = {
         ...state,
         ...action.payload,
-        success:false
+        success: true
       };
       break;
 
-    case actions.LOGIN_REQUEST_ENDS:
+    case actions.VEHICLE_UPDATE_REQUEST_FAILED:
+      newState = {
+        ...state,
+        ...action.payload,
+        success: false
+      };
+      break;
+
+    case actions.VEHICLE_UPDATE_REQUEST_ENDS:
       newState = {
         ...state,
         requesting: false,
-        success:false
+        success: false
       };
       break;
 
-    case actions.LOGIN_LOGOUT:
-
-    case actions.LOGIN_RESET_STATE:
+    case actions.VEHICLE_UPDATE_RESET_STATE:
       newState = { ...initialState };
       break;
 
-    case actions.LOGIN_RESET_ERROR:
+    case actions.VEHICLE_UPDATE_RESET_ERROR:
       newState = {
         ...state,
-        error:null,
-        success:null
+        error: null,
+        success: null
       };
       break;
 
