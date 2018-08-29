@@ -11,6 +11,8 @@ import {
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import FormRow from "components/form-row/FormRow";
+import Swal from "sweetalert2";
+
 
 import "./styles.css";
 
@@ -20,12 +22,16 @@ class UpdateVehicle extends React.Component {
     this.state = {
       modal: false,
       validator: false,
-      typeVehicle: [{ value: 0 }, { value: 1 }, { value: 2 }],
+      typeVehicle: [
+        { value: "Typo 1" },
+        { value: "Tipo 2" },
+        { value: "Tipo 3" }
+      ],
       statusVehicle: [
         { value: false, label: "Active" },
         { value: true, label: "Inactive" }
       ],
-      type: "",
+      type: "Typo 1",
       status: "",
       profile: {}
     };
@@ -33,6 +39,7 @@ class UpdateVehicle extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.handleTouched = this.handleTouched.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit=this.handleSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -41,20 +48,29 @@ class UpdateVehicle extends React.Component {
     this.setState({
       ...this.state,
       profile,
-      type: profile.type
+      type: profile.type,
+      status:profile.status,
+      modal:true
     });
   }
 
+  componentWillUnmount(){
+    console.log('Component distroyed')
+  }
+
   toggle() {
+    console.log('Closed modal')
     this.setState({
       modal: !this.state.modal
     });
+    this.props.created()
   }
 
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
     });
+    this.handleTouched()
   }
 
   handleTouched() {
@@ -63,8 +79,60 @@ class UpdateVehicle extends React.Component {
     });
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    const { type, status } = this.state;
+    let data = {
+      type,
+      status,
+      plates: this.refs.plates.getValue(),
+      brand: this.refs.brand.getValue(),
+      model: this.refs.model.getValue(),
+      soat: this.refs.soat.getValue()
+    };
+    console.log(data);
+    const {_id}=this.state.profile
+    this.props.dispatch(actions.fetch(_id,data));
+  }
+
+  messageError() {
+    const { error } = this.props;
+    {
+      Swal({
+        position: "center",
+        type: "error",
+        title: error.message ? error.message : error,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    setTimeout(() => {
+      this.props.dispatch(actions.resetError());
+    }, 1000);
+  }
+
+  messageSuccess() {
+    {
+      Swal({
+        position: "center",
+        type: "success",
+        title: "Vehicle has been updated",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    setTimeout(() => {
+      this.setState({
+        validator: false,
+        modal:false
+      });
+      this.props.dispatch(actions.resetError());
+      this.props.created()
+    }, 1000);
+  }
+
   render() {
-    const { requesting } = this.props;
+    const { requesting,error,success } = this.props;
     const {
       validator,
       profile,
@@ -73,11 +141,21 @@ class UpdateVehicle extends React.Component {
       type,
       status
     } = this.state;
+
+    let date='2017-06-01'
+    console.log('Profile:t: ',profile.soat)
+    console.log('erro_ ',error)
+    if (error) {
+      this.messageError(error);
+    }
+    if (success === true) {
+      this.messageSuccess(error);
+    }
     return (
       <div>
-        <Button color="danger" onClick={this.toggle}>
+        {/* <Button color="danger" onClick={this.toggle}>
           <i className="fa fa-pencil-alt icon-file" />
-        </Button>
+        </Button> */}
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}
@@ -122,9 +200,10 @@ class UpdateVehicle extends React.Component {
                     inputType="date"
                     labelText="Date SOAT"
                     isRequired={true}
-                    value={profile ? profile.soat : ""}
+                    // value={profile ? profile.soat : ""}
+                    value={date}
                     touched={this.handleTouched}
-                    ref="date"
+                    ref="soat"
                   />
                 </div>
                 <div className="col-md-6">
@@ -199,12 +278,13 @@ class UpdateVehicle extends React.Component {
   }
 }
 
-const mapStateTopProps = store => {
-  const { profile } = store.profile;
+const mapStateToProps = (store) => {
+  const { update } = store.vehicles;
   return {
-    requesting: profile.requesting,
-    error: profile.error,
-    success: profile.success
+    requesting: update.requesting,
+    error: update.error,
+    success: update.success
   };
 };
-export default UpdateVehicle;
+
+export default connect(mapStateToProps)(UpdateVehicle)

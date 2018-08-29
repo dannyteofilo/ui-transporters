@@ -7,7 +7,7 @@ import {
   Label,
   Input
 } from "reactstrap";
-import * as actions from "../update/redux/actions";
+import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import FormRow from "components/form-row/FormRow";
 import Swal from "sweetalert2";
@@ -78,7 +78,7 @@ class CreateVehicle extends React.Component {
       soat: this.refs.soat.getValue()
     };
     console.log(data);
-    this.props.dispatch(actions.create(data));
+    this.props.dispatch(actions.fetch(data));
   }
 
   messageError() {
@@ -97,12 +97,12 @@ class CreateVehicle extends React.Component {
     }, 1000);
   }
 
-  messageSuccess(message) {
+  messageSuccess() {
     {
       Swal({
         position: "center",
         type: "success",
-        title: "Vehicle has been Created",
+        title: "Vehicle has been created",
         showConfirmButton: false,
         timer: 1500
       });
@@ -264,11 +264,11 @@ class CreateVehicle extends React.Component {
 }
 
 const mapStateToProps = store => {
-  const { profile } = store.vehicles;
+  const { create } = store.vehicles;
   return {
-    requesting: profile.requesting,
-    error: profile.error,
-    success: profile.success
+    requesting: create.requesting,
+    error: create.error,
+    success: create.success
   };
 };
 

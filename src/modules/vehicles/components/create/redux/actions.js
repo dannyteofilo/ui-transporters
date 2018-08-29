@@ -2,7 +2,7 @@ import * as actions from 'shared/redux/constants';
 
 export const starts = () => {
     return {
-        type: actions.VEHICLE_UPDATE_REQUEST_STARTS,
+        type: actions.VEHICLE_CREATE_REQUEST_STARTS,
         payload: {
             requesting: true,
         }
@@ -11,7 +11,7 @@ export const starts = () => {
 
 export const ends = () => {
     return {
-        type: actions.VEHICLE_UPDATE_REQUEST_ENDS,
+        type: actions.VEHICLE_CREATE_REQUEST_ENDS,
         payload: {
             requesting: true,
         }
@@ -20,38 +20,36 @@ export const ends = () => {
 
 export const fails = (error) => {
     return {
-        type: actions.VEHICLE_UPDATE_REQUEST_FAILED,
+        type: actions.VEHICLE_CREATE_REQUEST_FAILED,
         payload: error
     }
 }
 
 export const success = (response) => {
     return {
-        type: actions.VEHICLE_UPDATE_REQUEST_SUCCESS,
+        type: actions.VEHICLE_CREATE_REQUEST_SUCCESS,
         payload: response
     }
 }
 
 
-export const fetch = (id,data) => {
+export const fetch = (data) => {
     return {
-        type: actions.VEHICLE_UPDATE_PERFORM_FETCH,
-        id:id,
+        type: actions.VEHICLE_CREATE_PERFORM_FETCH,
         payload:data
     }
 }
 
 
-
 export const reset = () => {
     return {
-        type: actions.VEHICLE_UPDATE_RESET_STATE
+        type: actions.VEHICLE_CREATE_RESET_STATE
     }
 }
 
 
 export const resetError = () => {
     return {
-        type: actions.VEHICLE_UPDATE_RESET_ERROR
+        type: actions.VEHICLE_CREATE_RESET_ERROR
     }
 }

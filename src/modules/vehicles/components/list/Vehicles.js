@@ -11,7 +11,11 @@ import "./styles.css";
 class Vehicles extends Component {
   constructor(props) {
     super();
-    this.hanldeCreateSuccess=this.hanldeCreateSuccess.bind(this)
+    this.state = {
+      profile: null
+    }
+    this.hanldeCreateSuccess = this.hanldeCreateSuccess.bind(this)
+    this.handleOpenModal=this.handleOpenModal.bind(this)
   }
 
   componentWillMount() {
@@ -34,13 +38,25 @@ class Vehicles extends Component {
     }, 1000);
   }
 
-  hanldeCreateSuccess(){
+  hanldeCreateSuccess() {
+    this.setState({
+      ...this.state,
+      profile: null
+    })
     this.props.dispatch(actions.fetch())
+  }
+
+  handleOpenModal(profile) {
+    this.setState({
+      ...this.state,
+      profile
+    })
   }
 
   render() {
     const { error, data } = this.props;
-    console.log("Erorororororo: ", error);
+    // console.log("Erorororororo: ", error);
+    const { profile } = this.state
     if (error) {
       this.messageError();
     }
@@ -69,15 +85,24 @@ class Vehicles extends Component {
                   <td>{value.model}</td>
                   <td>{value.status}</td>
                   <td>
-                    <UpdateVehicle 
-                    profile={value} 
-                    />
+                    <Button color="danger" onClick={()=>{this.handleOpenModal(value)}}>
+                      <i className="fa fa-pencil-alt icon-file" />
+                    </Button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+
+        {
+          profile &&
+          <UpdateVehicle
+            profile={profile}
+            created={this.hanldeCreateSuccess}
+          />
+
+        }
         <div className="row btn-update">
           <CreateVehicle
             created={this.hanldeCreateSuccess}
