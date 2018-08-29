@@ -66,7 +66,7 @@ class FormVehicle extends React.Component {
     } else {
       this.setState({
         ...this.state,
-        title: "Update Vehicle"
+        title: "Create Vehicle"
       });
     }
   }

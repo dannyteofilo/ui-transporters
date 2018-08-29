@@ -5,7 +5,7 @@ import NavComponent from "components/nav-bar/NavBar";
 import Home from "modules/home/Home";
 import Vehicles from "modules/vehicles/components/list/Vehicles";
 import Drivers from "modules/drivers/Drivers";
-import Routes from "modules/routes/Routes"
+import Travels from "modules/travels/components/list/Travels"
 import Profile from 'modules/user/profile/Profile'
 import Auth from "services/AuthService";
 
@@ -36,9 +36,9 @@ class Admin extends Component {
                   component={Drivers}
                 />
                 <Route
-                  path="/routes"
-                  name="routes"
-                  component={Routes}
+                  path="/travels"
+                  name="travels"
+                  component={Travels}
                 />
                 <Route path={"/profile"} name="profile" component={Profile}/>
                 <Redirect from="/" to="/home" />

@@ -59,8 +59,8 @@ class NavComponent extends Component {
                 </Link>
               </NavItem>
               <NavItem>
-              <Link to="/routes" className="nav-link">
-                  Routes
+              <Link to="/travels" className="nav-link">
+                  Travels
                 </Link>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>

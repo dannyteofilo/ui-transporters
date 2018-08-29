@@ -3,12 +3,12 @@ import { Table, Button } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
-import FormVehicle from "../create/FormVehicle";
-import DeleteVehicle from "../delete/DeleteVehicle";
+import FormTravel from "../create/FormTravels";
+import DeleteTravel from "../delete/DeleteTravel";
 
 import "./styles.css";
 
-class Vehicles extends Component {
+class Travels extends Component {
   constructor(props) {
     super();
     this.state = {
@@ -17,7 +17,7 @@ class Vehicles extends Component {
     };
     this.hanldeCreateSuccess = this.hanldeCreateSuccess.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this);
+    this.handleDeleteTravel = this.handleDeleteTravel.bind(this);
   }
 
   componentWillMount() {
@@ -56,7 +56,7 @@ class Vehicles extends Component {
     });
   }
 
-  handleDeleteVehicle(vehicle) {
+  handleDeleteTravel(vehicle) {
     this.setState({
       remove: vehicle._id
     });
@@ -75,12 +75,12 @@ class Vehicles extends Component {
         <Table responsive>
           <thead>
             <tr>
-              <th>Type Vehicle</th>
-              <th>Plates</th>
-              <th>Date SOAT</th>
-              <th>Brand</th>
-              <th>Model</th>
-              <th>Satus</th>
+              <th>Origin</th>
+              <th>Lat Origin</th>
+              <th>Lng Origin</th>
+              <th>Destination</th>
+              <th>Lat Destination</th>
+              <th>Lng Destination</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -89,12 +89,12 @@ class Vehicles extends Component {
             {data.map((value, index) => {
               return (
                 <tr key={index}>
-                  <td>{value.type}</td>
-                  <td>{value.plates}</td>
-                  <td>{value.soat}</td>
-                  <td>{value.brand}</td>
-                  <td>{value.model}</td>
-                  <td>{value.status ? 'Active' : 'Inactive'}</td>
+                  <td>{value.addressOrigin}</td>
+                  <td>{value.latOrigin}</td>
+                  <td>{value.lngOrigin}</td>
+                  <td>{value.addressDestination}</td>
+                  <td>{value.latDestination}</td>
+                  <td>{value.lngDestination}</td>
                   <td>
                     <Button
                       color="primary"
@@ -109,10 +109,10 @@ class Vehicles extends Component {
                     <Button
                       color="danger"
                       onClick={() => {
-                        this.handleDeleteVehicle(value);
+                        this.handleDeleteTravel(value);
                       }}
                     >
-                      <i className="far fa-trash-alt" />
+                      <i class="far fa-trash-alt" />
                     </Button>
                   </td>
                 </tr>
@@ -123,24 +123,24 @@ class Vehicles extends Component {
 
         {profile && (
           <div className="row btn-update">
-            <FormVehicle vehicle={profile} created={this.hanldeCreateSuccess} />
+            <FormTravel vehicle={profile} created={this.hanldeCreateSuccess} />
           </div>
         )}
 
         {!profile && (
           <div className="row btn-update">
-            <FormVehicle created={this.hanldeCreateSuccess} />
+            <FormTravel created={this.hanldeCreateSuccess} />
           </div>
         )}
 
-        {remove && <DeleteVehicle id={remove} deleted={this.hanldeCreateSuccess} />}
+        {remove && <DeleteTravel id={remove} deleted={this.hanldeCreateSuccess} />}
       </div>
     );
   }
 }
 
 const mapStatetoProps = store => {
-  const { list } = store.vehicles;
+  const { list } = store.travels;
   return {
     data: list.data ? list.data : [],
     requesting: list.requesting,
@@ -149,4 +149,4 @@ const mapStatetoProps = store => {
   };
 };
 
-export default connect(mapStatetoProps)(Vehicles);
+export default connect(mapStatetoProps)(Travels);
