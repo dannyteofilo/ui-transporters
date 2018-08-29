@@ -40,6 +40,20 @@ export const fetch = (data) => {
     }
 }
 
+export const fetchUpdate=(id, data)=>{
+    return{
+        type:actions.VEHICLE_UPDATE_PERFORM_FETCH,
+        id:id,
+        payload:data
+    }
+}
+
+export const fetchDelete=(id)=>{
+    return{
+        type:actions.VEHICLE_DELETE_PERFORM_FETCH,
+        id:id
+    }
+}
 
 export const reset = () => {
     return {

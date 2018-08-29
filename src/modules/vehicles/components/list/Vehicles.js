@@ -3,8 +3,8 @@ import { Table, Button } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
-import UpdateVehicle from "../update/FormUpdate";
-import CreateVehicle from "../create/FormCreate"
+import FormVehicle from "../create/FormVehicle";
+import DeleteVehicle from "../delete/DeleteVehicle";
 
 import "./styles.css";
 
@@ -12,10 +12,12 @@ class Vehicles extends Component {
   constructor(props) {
     super();
     this.state = {
-      profile: null
-    }
-    this.hanldeCreateSuccess = this.hanldeCreateSuccess.bind(this)
-    this.handleOpenModal=this.handleOpenModal.bind(this)
+      profile: null,
+      remove: ""
+    };
+    this.hanldeCreateSuccess = this.hanldeCreateSuccess.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this);
   }
 
   componentWillMount() {
@@ -41,22 +43,30 @@ class Vehicles extends Component {
   hanldeCreateSuccess() {
     this.setState({
       ...this.state,
-      profile: null
-    })
-    this.props.dispatch(actions.fetch())
+      profile: null,
+      remove:null
+    });
+    this.props.dispatch(actions.fetch());
   }
 
   handleOpenModal(profile) {
     this.setState({
       ...this.state,
       profile
-    })
+    });
+  }
+
+  handleDeleteVehicle(vehicle) {
+    this.setState({
+      remove: vehicle._id
+    });
   }
 
   render() {
     const { error, data } = this.props;
     // console.log("Erorororororo: ", error);
-    const { profile } = this.state
+    const { profile, remove } = this.state;
+    console.log("Profile vehicle: ", profile);
     if (error) {
       this.messageError();
     }
@@ -72,6 +82,7 @@ class Vehicles extends Component {
               <th>Model</th>
               <th>Satus</th>
               <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -85,8 +96,23 @@ class Vehicles extends Component {
                   <td>{value.model}</td>
                   <td>{value.status}</td>
                   <td>
-                    <Button color="danger" onClick={()=>{this.handleOpenModal(value)}}>
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        this.handleOpenModal(value);
+                      }}
+                    >
                       <i className="fa fa-pencil-alt icon-file" />
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="danger"
+                      onClick={() => {
+                        this.handleDeleteVehicle(value);
+                      }}
+                    >
+                      <i class="far fa-trash-alt" />
                     </Button>
                   </td>
                 </tr>
@@ -95,19 +121,19 @@ class Vehicles extends Component {
           </tbody>
         </Table>
 
-        {
-          profile &&
-          <UpdateVehicle
-            profile={profile}
-            created={this.hanldeCreateSuccess}
-          />
+        {profile && (
+          <div className="row btn-update">
+            <FormVehicle vehicle={profile} created={this.hanldeCreateSuccess} />
+          </div>
+        )}
 
-        }
-        <div className="row btn-update">
-          <CreateVehicle
-            created={this.hanldeCreateSuccess}
-          />
-        </div>
+        {!profile && (
+          <div className="row btn-update">
+            <FormVehicle created={this.hanldeCreateSuccess} />
+          </div>
+        )}
+
+        {remove && <DeleteVehicle id={remove} deleted={this.hanldeCreateSuccess} />}
       </div>
     );
   }

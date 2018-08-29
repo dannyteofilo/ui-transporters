@@ -4,7 +4,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Label,
   Input
 } from "reactstrap";
@@ -13,14 +12,14 @@ import { connect } from "react-redux";
 import FormRow from "components/form-row/FormRow";
 import Swal from "sweetalert2";
 
-
 import "./styles.css";
 
-class UpdateVehicle extends React.Component {
+class FormVehicle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      title: "",
       validator: false,
       typeVehicle: [
         { value: "Typo 1" },
@@ -28,49 +27,65 @@ class UpdateVehicle extends React.Component {
         { value: "Tipo 3" }
       ],
       statusVehicle: [
-        { value: false, label: "Active" },
-        { value: true, label: "Inactive" }
+        { value: true, label: "Active" },
+        { value: false, label: "Inactive" }
       ],
       type: "Typo 1",
-      status: "",
-      profile: {}
+      status: true,
+      plates: "",
+      soat: "",
+      brand: "",
+      model: "",
+      id:''
     };
 
     this.toggle = this.toggle.bind(this);
     this.handleTouched = this.handleTouched.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit=this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.messageError = this.messageError.bind(this);
   }
 
   componentWillMount() {
-    const { profile } = this.props;
-    console.log("Profile: ", profile);
-    this.setState({
-      ...this.state,
-      profile,
-      type: profile.type,
-      status:profile.status,
-      modal:true
-    });
-  }
-
-  componentWillUnmount(){
-    console.log('Component distroyed')
+    console.log("Component initialized");
+    const { vehicle } = this.props;
+    if (vehicle) {
+      console.log("vehicle: ", vehicle);
+      this.setState({
+        ...this.state,
+        id:vehicle._id,
+        type: vehicle.type,
+        status: vehicle.status,
+        plates: vehicle.plates,
+        soat: vehicle.soat,
+        brand: vehicle.brand,
+        model: vehicle.model,
+        modal: true,
+        title: "Update Vehicle"
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        title: "Update Vehicle"
+      });
+    }
   }
 
   toggle() {
-    console.log('Closed modal')
     this.setState({
       modal: !this.state.modal
     });
-    this.props.created()
+    this.props.created();
   }
 
   handleChange(e) {
+    const {validator} =this.state
+    if(!validator){
+      this.handleTouched()
+    }
     this.setState({
       [e.target.name]: e.target.value
     });
-    this.handleTouched()
   }
 
   handleTouched() {
@@ -81,7 +96,7 @@ class UpdateVehicle extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { type, status } = this.state;
+    const { type, status,id } = this.state;
     let data = {
       type,
       status,
@@ -91,8 +106,11 @@ class UpdateVehicle extends React.Component {
       soat: this.refs.soat.getValue()
     };
     console.log(data);
-    const {_id}=this.state.profile
-    this.props.dispatch(actions.fetch(_id,data));
+    if(id){
+      this.props.dispatch(actions.fetchUpdate(id,data))
+    }else{
+      this.props.dispatch(actions.fetch(data));
+    }
   }
 
   messageError() {
@@ -112,11 +130,12 @@ class UpdateVehicle extends React.Component {
   }
 
   messageSuccess() {
+    const {data}=this.props
     {
       Swal({
         position: "center",
         type: "success",
-        title: "Vehicle has been updated",
+        title: data ? data : 'Success',
         showConfirmButton: false,
         timer: 1500
       });
@@ -124,27 +143,27 @@ class UpdateVehicle extends React.Component {
     setTimeout(() => {
       this.setState({
         validator: false,
-        modal:false
+        modal: false
       });
       this.props.dispatch(actions.resetError());
-      this.props.created()
+      this.props.created();
     }, 1000);
   }
-
   render() {
-    const { requesting,error,success } = this.props;
+    const { requesting, error, success, vehicle } = this.props;
     const {
       validator,
-      profile,
       typeVehicle,
       statusVehicle,
       type,
-      status
+      status,
+      plates,
+      soat,
+      brand,
+      model,
+      title
     } = this.state;
 
-    let date='2017-06-01'
-    console.log('Profile:t: ',profile.soat)
-    console.log('erro_ ',error)
     if (error) {
       this.messageError(error);
     }
@@ -153,15 +172,15 @@ class UpdateVehicle extends React.Component {
     }
     return (
       <div>
-        {/* <Button color="danger" onClick={this.toggle}>
-          <i className="fa fa-pencil-alt icon-file" />
-        </Button> */}
+        <Button outline color="success" onClick={this.toggle}>
+          <i className="fa fa-icon fa-plus" />
+        </Button>
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}
           className={this.props.className}
         >
-          <ModalHeader toggle={this.toggle}>Update Vehicle</ModalHeader>
+          <ModalHeader toggle={this.toggle}>{title}</ModalHeader>
           <ModalBody>
             <form onSubmit={this.handleSubmit}>
               <div className="row">
@@ -188,7 +207,7 @@ class UpdateVehicle extends React.Component {
                     inputType="text"
                     labelText="Plates"
                     isRequired={true}
-                    value={profile ? profile.plates : ""}
+                    value={plates}
                     touched={this.handleTouched}
                     ref="plates"
                   />
@@ -200,9 +219,9 @@ class UpdateVehicle extends React.Component {
                     inputType="date"
                     labelText="Date SOAT"
                     isRequired={true}
-                    // value={profile ? profile.soat : ""}
-                    value={date}
+                    value={soat}
                     touched={this.handleTouched}
+                    // onChange={this.handleChange}
                     ref="soat"
                   />
                 </div>
@@ -211,7 +230,7 @@ class UpdateVehicle extends React.Component {
                     inputType="text"
                     labelText="Brand"
                     isRequired={true}
-                    value={profile ? profile.brand : ""}
+                    value={brand}
                     touched={this.handleTouched}
                     ref="brand"
                   />
@@ -223,7 +242,7 @@ class UpdateVehicle extends React.Component {
                     inputType="text"
                     labelText="Model"
                     isRequired={true}
-                    value={profile ? profile.model : ""}
+                    value={model}
                     touched={this.handleTouched}
                     ref="model"
                   />
@@ -249,16 +268,35 @@ class UpdateVehicle extends React.Component {
               </div>
               <div className="row btn-update">
                 <div className="btn-container">
-                  {requesting && (
-                    <Button color="danger" size="lg">
-                      Update ...
-                      <i className="fa fa-spin fa-sync" />
-                    </Button>
+                  {vehicle && (
+                    <div>
+                      {requesting && (
+                        <Button color="danger" size="lg">
+                          Update ...
+                          <i className="fa fa-spin fa-sync" />
+                        </Button>
+                      )}
+                      {!requesting && (
+                        <Button color="danger" size="lg" disabled={!validator}>
+                          Update
+                        </Button>
+                      )}
+                    </div>
                   )}
-                  {!requesting && (
-                    <Button color="danger" size="lg" disabled={!validator}>
-                      Update
-                    </Button>
+                  {!vehicle && (
+                    <div>
+                      {requesting && (
+                        <Button color="danger" size="lg">
+                          Creating ...
+                          <i className="fa fa-spin fa-sync" />
+                        </Button>
+                      )}
+                      {!requesting && (
+                        <Button color="danger" size="lg">
+                          Create
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -278,13 +316,14 @@ class UpdateVehicle extends React.Component {
   }
 }
 
-const mapStateToProps = (store) => {
-  const { update } = store.vehicles;
+const mapStateToProps = store => {
+  const { profile } = store.vehicles;
   return {
-    requesting: update.requesting,
-    error: update.error,
-    success: update.success
+    data:profile ? profile.message : '',
+    requesting: profile.requesting,
+    error: profile.error,
+    success: profile.success
   };
 };
 
-export default connect(mapStateToProps)(UpdateVehicle)
+export default connect(mapStateToProps)(FormVehicle);
