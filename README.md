@@ -1,3 +1,6 @@
+Nota: Probablemente en la sección de travels, el mapa marque un error, de debe a que mi key-api de google maps ya eccedió el límite, sugiero cambiarla por una nueva en /public/index <Script>
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
