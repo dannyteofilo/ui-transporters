@@ -1,7 +1,7 @@
-## Important
+# Important
 Probably in the travel section, the map marks an error, because my key-api of google maps already exceeded the limit, I suggest changing it for a new one in: /public/index 
     <script src="https://maps.googleapis.com/maps/api/js?key={API-KEY}&libraries=geometry,places" async defer></script>
-# Before starting the project you must create an .env file as in the example: .env.example
+## Before starting the project you must create an .env file as in the example: .env.example
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
