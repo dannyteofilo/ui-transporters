@@ -5,10 +5,7 @@ import { connect } from "react-redux";
 import Swal from "sweetalert2";
 
 class DeleteDriver extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+  
   componentWillMount() {
       const {id}=this.props
       this.props.dispatch(actions.fetchDelete(id))

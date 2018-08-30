@@ -9,7 +9,6 @@ class Map extends Component {
   }
 
   componentWillMount() {
-      console.log('Props: ',this.props)
     if (this.props.lat && this.props.lng) {
         setTimeout(() => {
             this.setMapEdit()
@@ -40,8 +39,6 @@ class Map extends Component {
         setTimeout(() => {
           let center = map.getCenter();
           geocoder.geocode({ latLng: center }, (results, status) => {
-            console.log(results, status);
-            console.log("result: ", results[1].formatted_address);
             this.props.setAddress(
               results[1].formatted_address,
               map.getCenter().lat(),
@@ -81,8 +78,6 @@ class Map extends Component {
       setTimeout(() => {
         let center = map.getCenter();
         geocoder.geocode({ latLng: center }, (results, status) => {
-          console.log(results, status);
-          console.log("result: ", results[1].formatted_address);
           this.props.setAddress(
             results[1].formatted_address,
             map.getCenter().lat(),

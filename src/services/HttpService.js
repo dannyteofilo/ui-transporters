@@ -13,7 +13,6 @@ class Http {
   }
 
   request(config) {
-      console.log('request: ',config);
     return this.axios.request(config);
   }
 
@@ -73,7 +72,6 @@ class Http {
         }
 
         this.notifyAboutCurrentHttpCalls(1);
-        console.log("Config return ", config);
         return config;
       },
       error => {

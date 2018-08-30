@@ -4,8 +4,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  Label,
-  Input
 } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
@@ -21,21 +19,10 @@ class FormDriver extends React.Component {
       modal: false,
       title: "",
       validator: false,
-      typeVehicle: [
-        { value: "Typo 1" },
-        { value: "Tipo 2" },
-        { value: "Tipo 3" }
-      ],
-      statusVehicle: [
-        { value: true, label: "Active" },
-        { value: false, label: "Inactive" }
-      ],
-      type: "Typo 1",
-      status: true,
-      plates: "",
-      soat: "",
-      brand: "",
-      model: "",
+      name:'',
+      lastName:'',
+      numDocument:'',
+      typeDocument:'',
       id:''
     };
 
@@ -47,26 +34,22 @@ class FormDriver extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Component initialized");
-    const { vehicle } = this.props;
-    if (vehicle) {
-      console.log("vehicle: ", vehicle);
+    const { driver } = this.props;
+    if (driver) {
       this.setState({
         ...this.state,
-        id:vehicle._id,
-        type: vehicle.type,
-        status: vehicle.status,
-        plates: vehicle.plates,
-        soat: vehicle.soat,
-        brand: vehicle.brand,
-        model: vehicle.model,
+        id:driver._id,
+        name: driver.name,
+        lastName: driver.lastName,
+        numDocument: driver.numDocument,
+        typeDocument: driver.typeDocument,
         modal: true,
-        title: "Update Vehicle"
+        title: "Update Driver"
       });
     } else {
       this.setState({
         ...this.state,
-        title: "Create Vehicle"
+        title: "Create Driver"
       });
     }
   }
@@ -96,16 +79,13 @@ class FormDriver extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { type, status,id } = this.state;
+    const { id } = this.state;
     let data = {
-      type,
-      status,
-      plates: this.refs.plates.getValue(),
-      brand: this.refs.brand.getValue(),
-      model: this.refs.model.getValue(),
-      soat: this.refs.soat.getValue()
+      name: this.refs.name.getValue(),
+      lastName: this.refs.lastName.getValue(),
+      numDocument: this.refs.numDocument.getValue(),
+      typeDocument: this.refs.typeDocument.getValue()
     };
-    console.log(data);
     if(id){
       this.props.dispatch(actions.fetchUpdate(id,data))
     }else{
@@ -150,17 +130,13 @@ class FormDriver extends React.Component {
     }, 1000);
   }
   render() {
-    const { requesting, error, success, vehicle } = this.props;
+    const { requesting, error, success, driver } = this.props;
     const {
       validator,
-      typeVehicle,
-      statusVehicle,
-      type,
-      status,
-      plates,
-      soat,
-      brand,
-      model,
+      name,
+      lastName,
+      numDocument,
+      typeDocument,      
       title
     } = this.state;
 
@@ -185,90 +161,54 @@ class FormDriver extends React.Component {
             <form onSubmit={this.handleSubmit}>
               <div className="row">
                 <div className="col-md-6">
-                  <Label for="exampleSelect">Type Vehicle</Label>
-                  <Input
-                    type="select"
-                    name="type"
-                    id="exampleSelect"
-                    value={type}
-                    onChange={this.handleChange}
-                  >
-                    {typeVehicle.map((val, index) => {
-                      return (
-                        <option key={index} value={val.value}>
-                          {val.value}
-                        </option>
-                      );
-                    })}
-                  </Input>
+                  <FormRow
+                    inputType="text"
+                    labelText="Name"
+                    isRequired={true}
+                    value={name}
+                    touched={this.handleTouched}
+                    ref="name"
+                  />
                 </div>
                 <div className="col-md-6">
                   <FormRow
                     inputType="text"
-                    labelText="Plates"
+                    labelText="Last Name"
                     isRequired={true}
-                    value={plates}
-                    touched={this.handleTouched}
-                    ref="plates"
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6">
-                  <FormRow
-                    inputType="date"
-                    labelText="Date SOAT"
-                    isRequired={true}
-                    value={soat}
+                    value={lastName}
                     touched={this.handleTouched}
                     // onChange={this.handleChange}
-                    ref="soat"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <FormRow
-                    inputType="text"
-                    labelText="Brand"
-                    isRequired={true}
-                    value={brand}
-                    touched={this.handleTouched}
-                    ref="brand"
+                    ref="lastName"
                   />
                 </div>
               </div>
-              <div className="row">
+              <div className="row">                
                 <div className="col-md-6">
                   <FormRow
-                    inputType="text"
-                    labelText="Model"
+                    inputType="number"
+                    labelText="Number Document"
                     isRequired={true}
-                    value={model}
+                    value={numDocument}
                     touched={this.handleTouched}
-                    ref="model"
+                    ref="numDocument"
                   />
                 </div>
                 <div className="col-md-6">
-                  <Label for="exampleSelect">Status</Label>
-                  <Input
-                    type="select"
-                    name="status"
-                    id="exampleSelect"
-                    value={status}
-                    onChange={this.handleChange}
-                  >
-                    {statusVehicle.map((val, index) => {
-                      return (
-                        <option key={index} value={val.value}>
-                          {val.label}
-                        </option>
-                      );
-                    })}
-                  </Input>
+                  <FormRow
+                    inputType="text"
+                    labelText="Type Document"
+                    isRequired={true}
+                    value={typeDocument}
+                    touched={this.handleTouched}
+                    ref="typeDocument"
+                  />
                 </div>
+              </div>
+              <div className="row">                
               </div>
               <div className="row btn-update">
                 <div className="btn-container">
-                  {vehicle && (
+                  {driver && (
                     <div>
                       {requesting && (
                         <Button color="danger" size="lg">
@@ -283,7 +223,7 @@ class FormDriver extends React.Component {
                       )}
                     </div>
                   )}
-                  {!vehicle && (
+                  {!driver && (
                     <div>
                       {requesting && (
                         <Button color="danger" size="lg">
@@ -317,7 +257,7 @@ class FormDriver extends React.Component {
 }
 
 const mapStateToProps = store => {
-  const { profile } = store.vehicles;
+  const { profile } = store.drivers;
   return {
     data:profile ? profile.message : '',
     requesting: profile.requesting,

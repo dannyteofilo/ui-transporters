@@ -7,6 +7,7 @@ import listTravel from './../../modules/travels/components/list/redux/saga'
 import createTravel from './../../modules/travels/components/create/redux/saga'
 import ListDriver from './../../modules/drivers/components/list/redux/saga'
 import createDriver from './../../modules/drivers/components/create/redux/saga'
+import stats from './../../modules/home/redux/saga';
 // import avatar from './../../modules/user/profile/redux/saga'
 
 export default function * rootSaga(){
@@ -17,7 +18,8 @@ export default function * rootSaga(){
         fork(listTravel),
         fork(createTravel),
         fork(ListDriver),
-        fork(createDriver)
+        fork(createDriver),
+        fork(stats)
         // fork(avatar)
     ])
 }

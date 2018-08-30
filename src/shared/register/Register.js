@@ -40,7 +40,6 @@ class Register extends Component {
     render() {
 
         const { from } = this.props.location.state || { from: { pathname: '/home' } }
-        console.log('From:  ', from)
         if (Auth.isAuthenticated()) {
             return (
                 <Redirect to={from} />

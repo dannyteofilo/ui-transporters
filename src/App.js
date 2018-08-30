@@ -11,7 +11,6 @@ import { getStore } from "./shared/redux/store";
 
 class App extends Component {
   render() {
-    console.log(getStore())
     return (
       <Provider store={getStore()}>
       <div >

@@ -14,7 +14,6 @@ class Auth {
   }
 
   login(credentials) {
-    console.log("Credentials: ", credentials);
     return Http.post("/login", credentials);
   }
 

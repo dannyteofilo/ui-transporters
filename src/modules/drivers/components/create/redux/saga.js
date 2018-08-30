@@ -10,7 +10,6 @@ import * as actions from 'shared/redux/constants';
 
 
 function* performCreate(action) {
-    console.log('Saga: ',action)
     try {
         yield put(list.starts());
 

@@ -64,9 +64,7 @@ class Vehicles extends Component {
 
   render() {
     const { error, data } = this.props;
-    // console.log("Erorororororo: ", error);
     const { profile, remove } = this.state;
-    console.log("Profile vehicle: ", profile);
     if (error) {
       this.messageError();
     }
