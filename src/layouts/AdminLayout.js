@@ -4,7 +4,7 @@ import { Jumbotron, Card } from "reactstrap";
 import NavComponent from "components/nav-bar/NavBar";
 import Home from "modules/home/Home";
 import Vehicles from "modules/vehicles/components/list/Vehicles";
-import Drivers from "modules/drivers/Drivers";
+import Drivers from "modules/drivers/components/list/Drivers";
 import Travels from "modules/travels/components/list/Travels"
 import Profile from 'modules/user/profile/Profile'
 import Auth from "services/AuthService";
