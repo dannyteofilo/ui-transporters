@@ -1,5 +1,5 @@
 ## Nota
-Probablemente en la sección de travels, el mapa marque un error, de debe a que mi key-api de google maps ya eccedió el límite, sugiero cambiarla por una nueva en /public/index <Script>
+Probably in the travel section, the map marks an error, because my key-api of google maps already exceeded the limit, I suggest changing it for a new one in: /public/index <Script>
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
