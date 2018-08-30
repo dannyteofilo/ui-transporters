@@ -9,7 +9,6 @@ import {
 } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
-import FormRow from "components/form-row/FormRow";
 import Swal from "sweetalert2";
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -50,10 +49,8 @@ class FormTravel extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Component initialized");
     const { travel } = this.props;
     if (travel) {
-      console.log("vehicle: ", travel);
       this.setState({
         ...this.state,
         id: travel._id,
@@ -93,17 +90,14 @@ class FormTravel extends React.Component {
   }
 
   handleChangeAddress = address => {
-    console.log("address", address);
     this.setState({ address });
   };
 
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => {
-        console.log("results: ", results);
         this.refs.mapa.setNewMarker(results);
         getLatLng(results[0]).then(latLng => {
-          console.log("Success", latLng);
           const { step } = this.state;
           if (step === 1) {
             this.setState({
@@ -161,7 +155,6 @@ class FormTravel extends React.Component {
       latDestination,
       lngDestination
     };
-    console.log(data);
     if (id) {
       this.props.dispatch(actions.fetchUpdate(id, data));
     } else {
@@ -186,7 +179,6 @@ class FormTravel extends React.Component {
   }
 
   handleNextStep() {
-    console.log(this.state);
     const { travel } = this.props;
     this.setState({
       step: 2,
@@ -219,7 +211,6 @@ class FormTravel extends React.Component {
     const { requesting, error, success, travel } = this.props;
     const {
       address,
-      validator,
       title,
       step,
       latOrigin,

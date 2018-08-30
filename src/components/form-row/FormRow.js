@@ -20,7 +20,6 @@ class FormRow extends Component {
         inputValue: value
       });
     }
-    console.log("StateInput: ", this.state);
   }
   onChange(e) {
     this.setState({ inputValue: e.target.value });

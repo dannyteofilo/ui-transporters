@@ -64,9 +64,7 @@ class Drivers extends Component {
 
   render() {
     const { error, data } = this.props;
-    // console.log("Erorororororo: ", error);
     const { profile, remove } = this.state;
-    console.log("Profile vehicle: ", profile);
     if (error) {
       this.messageError();
     }
@@ -75,12 +73,10 @@ class Drivers extends Component {
         <Table responsive>
           <thead>
             <tr>
-              <th>Type Vehicle</th>
-              <th>Plates</th>
-              <th>Date SOAT</th>
-              <th>Brand</th>
-              <th>Model</th>
-              <th>Satus</th>
+              <th>Name</th>
+              <th>Last Name</th>
+              <th>Number Document</th>
+              <th>Type Document</th>              
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -89,15 +85,14 @@ class Drivers extends Component {
             {data.map((value, index) => {
               return (
                 <tr key={index}>
-                  <td>{value.type}</td>
-                  <td>{value.plates}</td>
-                  <td>{value.soat}</td>
-                  <td>{value.brand}</td>
-                  <td>{value.model}</td>
-                  <td>{value.status ? 'Active' : 'Inactive'}</td>
+                  <td>{value.name}</td>
+                  <td>{value.lastName}</td>
+                  <td>{value.numDocument}</td>
+                  <td>{value.typeDocument}</td>
                   <td>
                     <Button
                       color="primary"
+                      outline
                       onClick={() => {
                         this.handleOpenModal(value);
                       }}
@@ -108,6 +103,7 @@ class Drivers extends Component {
                   <td>
                     <Button
                       color="danger"
+                      outline
                       onClick={() => {
                         this.handleDeleteDriver(value);
                       }}
@@ -123,7 +119,7 @@ class Drivers extends Component {
 
         {profile && (
           <div className="row btn-update">
-            <FormDriver vehicle={profile} created={this.hanldeCreateSuccess} />
+            <FormDriver driver={profile} created={this.hanldeCreateSuccess} />
           </div>
         )}
 

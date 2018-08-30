@@ -5,9 +5,7 @@ import { connect } from "react-redux";
 import Swal from "sweetalert2";
 
 class DeleteVehicle extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  
 
   componentWillMount() {
       const {id}=this.props

@@ -47,10 +47,8 @@ class FormVehicle extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Component initialized");
     const { vehicle } = this.props;
     if (vehicle) {
-      console.log("vehicle: ", vehicle);
       this.setState({
         ...this.state,
         id:vehicle._id,
@@ -105,7 +103,6 @@ class FormVehicle extends React.Component {
       model: this.refs.model.getValue(),
       soat: this.refs.soat.getValue()
     };
-    console.log(data);
     if(id){
       this.props.dispatch(actions.fetchUpdate(id,data))
     }else{

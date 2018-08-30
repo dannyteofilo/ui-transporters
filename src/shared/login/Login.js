@@ -45,8 +45,6 @@ class Login extends Component {
     const { from } = this.props.location.state || {
       from: { pathname: "/home" }
     };
-    console.log("From:  ", from);
-    console.log("istokenExpire: ", Auth.isAuthenticated());
     if (Auth.isAuthenticated()) {
       return <Redirect to={from} />;
     }

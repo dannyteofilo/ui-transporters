@@ -70,7 +70,6 @@ class UserProfile extends Component {
       reader.readAsDataURL(file);
     }
     this.handleTouched();
-    console.log(this.state);
   }
 
   messageError(error) {
