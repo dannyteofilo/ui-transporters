@@ -1,4 +1,4 @@
-## Nota
+## Important
 Probably in the travel section, the map marks an error, because my key-api of google maps already exceeded the limit, I suggest changing it for a new one in: /public/index <Script>
 
 
