@@ -13,9 +13,9 @@ import FormRow from "components/form-row/FormRow";
 import Swal from "sweetalert2";
 import PlacesAutocomplete, {
   geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
-import Map from '../map/Map'
+  getLatLng
+} from "react-places-autocomplete";
+import Map from "../map/Map";
 
 import "./styles.css";
 
@@ -24,17 +24,17 @@ class FormTravel extends React.Component {
     super(props);
     this.state = {
       modal: false,
-      address: '',
+      address: "",
       title: "",
       step: 1,
-      id: '',
+      id: "",
       validator: false,
       addressOrigin: "",
       addressDestination: "",
       latOrigin: "",
       lngOrigin: "",
       latDestination: "",
-      lngDestination: ''
+      lngDestination: ""
     };
 
     this.toggle = this.toggle.bind(this);
@@ -51,20 +51,21 @@ class FormTravel extends React.Component {
 
   componentWillMount() {
     console.log("Component initialized");
-    const { vehicle } = this.props;
-    if (vehicle) {
-      console.log("vehicle: ", vehicle);
+    const { travel } = this.props;
+    if (travel) {
+      console.log("vehicle: ", travel);
       this.setState({
         ...this.state,
-        id: vehicle._id,
-        type: vehicle.type,
-        status: vehicle.status,
-        plates: vehicle.plates,
-        soat: vehicle.soat,
-        brand: vehicle.brand,
-        model: vehicle.model,
+        id: travel._id,
+        addressOrigin: travel.addressOrigin,
+        addressDestination: travel.addressDestination,
+        latOrigin: travel.latOrigin,
+        lngOrigin: travel.lngOrigin,
+        latDestination: travel.latDestination,
+        lngDestination: travel.lngDestination,
         modal: true,
         title: "Update Travel",
+        address: travel.addressOrigin
       });
     } else {
       this.setState({
@@ -82,9 +83,9 @@ class FormTravel extends React.Component {
   }
 
   handleChange(e) {
-    const { validator } = this.state
+    const { validator } = this.state;
     if (!validator) {
-      this.handleTouched()
+      this.handleTouched();
     }
     this.setState({
       [e.target.name]: e.target.value
@@ -92,50 +93,48 @@ class FormTravel extends React.Component {
   }
 
   handleChangeAddress = address => {
-    console.log('address', address)
-    this.setState({ address })
-  }
-
+    console.log("address", address);
+    this.setState({ address });
+  };
 
   handleSelect = address => {
     geocodeByAddress(address)
-      .then((results) => {
-        console.log('results: ', results)
-        this.refs.mapa.setNewMarker(results)
-        getLatLng(results[0])
-          .then(latLng => {
-            console.log('Success', latLng)
-            const { step } = this.state
-            if (step === 1) {
-              this.setState({
-                ...this.state,
-                latOrigin: latLng.lat,
-                lngOrigin: latLng.lng,
-                addressOrigin: address
-              })
-            } else {
-              this.setState({
-                ...this.state,
-                latDestination: latLng.lat,
-                lngDestination: latLng.lng,
-                addressDestination: address
-              })
-            }
-          })
+      .then(results => {
+        console.log("results: ", results);
+        this.refs.mapa.setNewMarker(results);
+        getLatLng(results[0]).then(latLng => {
+          console.log("Success", latLng);
+          const { step } = this.state;
+          if (step === 1) {
+            this.setState({
+              ...this.state,
+              latOrigin: latLng.lat,
+              lngOrigin: latLng.lng,
+              addressOrigin: address
+            });
+          } else {
+            this.setState({
+              ...this.state,
+              latDestination: latLng.lat,
+              lngDestination: latLng.lng,
+              addressDestination: address
+            });
+          }
+        });
       })
-      .catch(error => console.error('Error', error));
+      .catch(error => console.error("Error", error));
   };
 
   handleSetNewAddress(address, lat, lng) {
-    this.handleChangeAddress(address)
-    this.handleUpdateLatLng(lat, lng)
+    this.handleChangeAddress(address);
+    this.handleUpdateLatLng(lat, lng);
   }
 
   handleUpdateLatLng(lat, lng) {
     this.setState({
       latOrigin: lat,
       lngOrigin: lng
-    })
+    });
   }
   handleTouched() {
     this.setState({
@@ -145,18 +144,26 @@ class FormTravel extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { id, addressOrigin, addressDestination, latOrigin, lngOrigin, latDestination, lngDestination } = this.state;
+    const {
+      id,
+      addressOrigin,
+      addressDestination,
+      latOrigin,
+      lngOrigin,
+      latDestination,
+      lngDestination
+    } = this.state;
     let data = {
       addressOrigin,
       addressDestination,
       latOrigin,
       lngOrigin,
       latDestination,
-      lngDestination,
+      lngDestination
     };
     console.log(data);
     if (id) {
-      this.props.dispatch(actions.fetchUpdate(id, data))
+      this.props.dispatch(actions.fetchUpdate(id, data));
     } else {
       this.props.dispatch(actions.fetch(data));
     }
@@ -179,20 +186,22 @@ class FormTravel extends React.Component {
   }
 
   handleNextStep() {
-    console.log(this.state)
+    console.log(this.state);
+    const { travel } = this.props;
     this.setState({
       step: 2,
-      address: ''
-    })
+      // address:''
+      address: travel ? travel.addressDestination : ""
+    });
   }
 
   messageSuccess() {
-    const { data } = this.props
+    const { data } = this.props;
     {
       Swal({
         position: "center",
         type: "success",
-        title: data ? data : 'Success',
+        title: data ? data : "Success",
         showConfirmButton: false,
         timer: 1500
       });
@@ -207,13 +216,16 @@ class FormTravel extends React.Component {
     }, 1000);
   }
   render() {
-    const { requesting, error, success, vehicle } = this.props;
+    const { requesting, error, success, travel } = this.props;
     const {
+      address,
       validator,
       title,
       step,
       latOrigin,
-      latDestination
+      lngOrigin,
+      latDestination,
+      lngDestination
     } = this.state;
 
     if (error) {
@@ -235,50 +247,57 @@ class FormTravel extends React.Component {
           <ModalHeader toggle={this.toggle}>{title}</ModalHeader>
           <ModalBody>
             <form onSubmit={this.handleSubmit}>
-
               <div className="row">
                 <div className="col-md-12">
                   <Label for="exampleSelect">
-                    Address
-                </Label>
+                    {step === 1 ? "Origin address" : "Destination address"}
+                  </Label>
                   <PlacesAutocomplete
-                    value={this.state.address}
+                    value={address}
                     onChange={this.handleChangeAddress}
                     onSelect={this.handleSelect}
                   >
-                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                    {({
+                      getInputProps,
+                      suggestions,
+                      getSuggestionItemProps,
+                      loading
+                    }) => (
                       <div>
                         <Input
                           {...getInputProps({
-                            placeholder: 'Search Places ...',
-                            className: 'location-search-input',
+                            placeholder: "Search Places ...",
+                            className: "location-search-input"
                           })}
                         />
                         <div>
-
                           {loading && <div>Loading...</div>}
                           {suggestions.map(suggestion => {
                             const className = suggestion.active
-                              ? 'suggestion-item--active'
-                              : 'suggestion-item';
+                              ? "suggestion-item--active"
+                              : "suggestion-item";
                             // inline style for demonstration purpose
                             const style = suggestion.active
-                              ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                              : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                              ? {
+                                  backgroundColor: "#fafafa",
+                                  cursor: "pointer"
+                                }
+                              : {
+                                  backgroundColor: "#ffffff",
+                                  cursor: "pointer"
+                                };
                             return (
                               <div
                                 {...getSuggestionItemProps(suggestion, {
                                   className,
-                                  style,
+                                  style
                                 })}
                               >
                                 <span>{suggestion.description}</span>
                               </div>
                             );
                           })}
-
                         </div>
-
                       </div>
                     )}
                   </PlacesAutocomplete>
@@ -287,60 +306,97 @@ class FormTravel extends React.Component {
               <div className="row">
                 <div className="col-md-12 container-map">
                   <div className="marker">
-                    <img src='http://maps.google.com/mapfiles/ms/icons/red-dot.png' alt="" />
+                    <img
+                      src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                      alt=""
+                    />
                   </div>
-                  <Map
-                    ref="mapa"
-                    // position={data.location.position}
-                    setAddress={this.handleSetNewAddress}
-                  />
+                  {step === 1 && (
+                    <Map
+                      ref="mapa"
+                      lat={latOrigin}
+                      lng={lngOrigin}
+                      // position={data.location.position}
+                      setAddress={this.handleSetNewAddress}
+                    />
+                  )}
+                  {step === 2 && (
+                    <Map
+                      ref="mapa"
+                      lat={latDestination}
+                      lng={lngDestination}
+                      // position={data.location.position}
+                      setAddress={this.handleSetNewAddress}
+                    />
+                  )}
                 </div>
               </div>
               <div className="row btn-update">
                 <div className="btn-container">
-                  {vehicle && (
+                  {travel && (
                     <div>
-                      {requesting && (
-                        <Button color="danger" size="lg">
-                          Update ...
-                          <i className="fa fa-spin fa-sync" />
-                        </Button>
-                      )}
-                      {!requesting && (
-                        <Button color="danger" size="lg" disabled={!validator}>
-                          Update
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                  {!vehicle && (
-                    <div>
-                      {
-                        step === 1 &&
-
-                        <Button color="danger" size="lg" disabled={!latOrigin}
+                      {step === 1 && (
+                        <Button
+                          color="danger"
+                          size="lg"
+                          disabled={!latOrigin}
                           onClick={this.handleNextStep}
                         >
                           Next
                         </Button>
-                      }
-                      {
-                        step === 2 &&
+                      )}
+                      {step === 2 && (
+                        <div>
+                          {requesting && (
+                            <Button color="danger" size="lg">
+                              Update ...
+                              <i className="fa fa-spin fa-sync" />
+                            </Button>
+                          )}
+                          {!requesting && (
+                            <Button
+                              color="danger"
+                              size="lg"
+                              disabled={!latDestination}
+                            >
+                              Update
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {!travel && (
+                    <div>
+                      {step === 1 && (
+                        <Button
+                          color="danger"
+                          size="lg"
+                          disabled={!latOrigin}
+                          onClick={this.handleNextStep}
+                        >
+                          Next
+                        </Button>
+                      )}
+                      {step === 2 && (
                         <div>
                           {requesting && (
                             <Button color="danger" size="lg">
                               Creating ...
-                          <i className="fa fa-spin fa-sync" />
+                              <i className="fa fa-spin fa-sync" />
                             </Button>
                           )}
                           {!requesting && (
-                            <Button color="danger" size="lg" disabled={!latDestination}>
+                            <Button
+                              color="danger"
+                              size="lg"
+                              disabled={!latDestination}
+                            >
                               Create
-                        </Button>
+                            </Button>
                           )}
                         </div>
-                      }
-
+                      )}
                     </div>
                   )}
                 </div>
@@ -364,7 +420,7 @@ class FormTravel extends React.Component {
 const mapStateToProps = store => {
   const { profile } = store.travels;
   return {
-    data: profile ? profile.message : '',
+    data: profile ? profile.message : "",
     requesting: profile.requesting,
     error: profile.error,
     success: profile.success

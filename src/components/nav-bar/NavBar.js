@@ -43,7 +43,7 @@ class NavComponent extends Component {
       <div>
         <Navbar color="info" dark expand="md">
           <Link to="/home" className="navbar-brand">
-            Home
+            Transport and associates
           </Link>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -54,12 +54,12 @@ class NavComponent extends Component {
                 </Link>
               </NavItem>
               <NavItem>
-              <Link to="/drivers" className="nav-link">
+                <Link to="/drivers" className="nav-link">
                   Drivers
                 </Link>
               </NavItem>
               <NavItem>
-              <Link to="/travels" className="nav-link">
+                <Link to="/travels" className="nav-link">
                   Travels
                 </Link>
               </NavItem>

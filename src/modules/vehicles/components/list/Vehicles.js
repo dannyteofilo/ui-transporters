@@ -98,6 +98,7 @@ class Vehicles extends Component {
                   <td>
                     <Button
                       color="primary"
+                      outline
                       onClick={() => {
                         this.handleOpenModal(value);
                       }}
@@ -108,6 +109,7 @@ class Vehicles extends Component {
                   <td>
                     <Button
                       color="danger"
+                      outline
                       onClick={() => {
                         this.handleDeleteVehicle(value);
                       }}

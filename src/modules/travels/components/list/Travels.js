@@ -98,6 +98,7 @@ class Travels extends Component {
                   <td>
                     <Button
                       color="primary"
+                      outline
                       onClick={() => {
                         this.handleOpenModal(value);
                       }}
@@ -108,11 +109,12 @@ class Travels extends Component {
                   <td>
                     <Button
                       color="danger"
+                      outline
                       onClick={() => {
                         this.handleDeleteTravel(value);
                       }}
                     >
-                      <i class="far fa-trash-alt" />
+                      <i className="far fa-trash-alt" />
                     </Button>
                   </td>
                 </tr>
@@ -123,7 +125,7 @@ class Travels extends Component {
 
         {profile && (
           <div className="row btn-update">
-            <FormTravel vehicle={profile} created={this.hanldeCreateSuccess} />
+            <FormTravel travel={profile} created={this.hanldeCreateSuccess} />
           </div>
         )}
 
