@@ -11,8 +11,11 @@ class VehicleServie {
     }
 
     create(data={}){
-        console.log('Data: ',data)
         return Http.post(`/vehicle`,data)
+    }
+
+    delete(id){
+        return Http.delete(`/vehicle/${id}`)
     }
 
 }

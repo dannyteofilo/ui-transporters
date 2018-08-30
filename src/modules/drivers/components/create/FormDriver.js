@@ -7,18 +7,19 @@ import {
   Label,
   Input
 } from "reactstrap";
-import * as actions from "../update/redux/actions";
+import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import FormRow from "components/form-row/FormRow";
 import Swal from "sweetalert2";
 
 import "./styles.css";
 
-class CreateVehicle extends React.Component {
+class FormDriver extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      title: "",
       validator: false,
       typeVehicle: [
         { value: "Typo 1" },
@@ -29,13 +30,13 @@ class CreateVehicle extends React.Component {
         { value: true, label: "Active" },
         { value: false, label: "Inactive" }
       ],
-
       type: "Typo 1",
       status: true,
       plates: "",
       soat: "",
       brand: "",
-      model: ""
+      model: "",
+      id:''
     };
 
     this.toggle = this.toggle.bind(this);
@@ -45,16 +46,43 @@ class CreateVehicle extends React.Component {
     this.messageError = this.messageError.bind(this);
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    console.log("Component initialized");
+    const { vehicle } = this.props;
+    if (vehicle) {
+      console.log("vehicle: ", vehicle);
+      this.setState({
+        ...this.state,
+        id:vehicle._id,
+        type: vehicle.type,
+        status: vehicle.status,
+        plates: vehicle.plates,
+        soat: vehicle.soat,
+        brand: vehicle.brand,
+        model: vehicle.model,
+        modal: true,
+        title: "Update Vehicle"
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        title: "Create Vehicle"
+      });
+    }
+  }
 
   toggle() {
     this.setState({
       modal: !this.state.modal
     });
+    this.props.created();
   }
 
   handleChange(e) {
-    console.log("Change: ", e.target.value, e.target.name);
+    const {validator} =this.state
+    if(!validator){
+      this.handleTouched()
+    }
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -68,7 +96,7 @@ class CreateVehicle extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { type, status } = this.state;
+    const { type, status,id } = this.state;
     let data = {
       type,
       status,
@@ -78,7 +106,11 @@ class CreateVehicle extends React.Component {
       soat: this.refs.soat.getValue()
     };
     console.log(data);
-    this.props.dispatch(actions.create(data));
+    if(id){
+      this.props.dispatch(actions.fetchUpdate(id,data))
+    }else{
+      this.props.dispatch(actions.fetch(data));
+    }
   }
 
   messageError() {
@@ -97,12 +129,13 @@ class CreateVehicle extends React.Component {
     }, 1000);
   }
 
-  messageSuccess(message) {
+  messageSuccess() {
+    const {data}=this.props
     {
       Swal({
         position: "center",
         type: "success",
-        title: "Vehicle has been Created",
+        title: data ? data : 'Success',
         showConfirmButton: false,
         timer: 1500
       });
@@ -110,14 +143,14 @@ class CreateVehicle extends React.Component {
     setTimeout(() => {
       this.setState({
         validator: false,
-        modal:false
+        modal: false
       });
       this.props.dispatch(actions.resetError());
-      this.props.created()
+      this.props.created();
     }, 1000);
   }
   render() {
-    const { requesting,error,success } = this.props;
+    const { requesting, error, success, vehicle } = this.props;
     const {
       validator,
       typeVehicle,
@@ -127,7 +160,8 @@ class CreateVehicle extends React.Component {
       plates,
       soat,
       brand,
-      model
+      model,
+      title
     } = this.state;
 
     if (error) {
@@ -146,7 +180,7 @@ class CreateVehicle extends React.Component {
           toggle={this.toggle}
           className={this.props.className}
         >
-          <ModalHeader toggle={this.toggle}>Create Vehicle</ModalHeader>
+          <ModalHeader toggle={this.toggle}>{title}</ModalHeader>
           <ModalBody>
             <form onSubmit={this.handleSubmit}>
               <div className="row">
@@ -234,16 +268,35 @@ class CreateVehicle extends React.Component {
               </div>
               <div className="row btn-update">
                 <div className="btn-container">
-                  {requesting && (
-                    <Button color="danger" size="lg">
-                      Creating ...
-                      <i className="fa fa-spin fa-sync" />
-                    </Button>
+                  {vehicle && (
+                    <div>
+                      {requesting && (
+                        <Button color="danger" size="lg">
+                          Update ...
+                          <i className="fa fa-spin fa-sync" />
+                        </Button>
+                      )}
+                      {!requesting && (
+                        <Button color="danger" size="lg" disabled={!validator}>
+                          Update
+                        </Button>
+                      )}
+                    </div>
                   )}
-                  {!requesting && (
-                    <Button color="danger" size="lg">
-                      Create
-                    </Button>
+                  {!vehicle && (
+                    <div>
+                      {requesting && (
+                        <Button color="danger" size="lg">
+                          Creating ...
+                          <i className="fa fa-spin fa-sync" />
+                        </Button>
+                      )}
+                      {!requesting && (
+                        <Button color="danger" size="lg">
+                          Create
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -266,10 +319,11 @@ class CreateVehicle extends React.Component {
 const mapStateToProps = store => {
   const { profile } = store.vehicles;
   return {
+    data:profile ? profile.message : '',
     requesting: profile.requesting,
     error: profile.error,
     success: profile.success
   };
 };
 
-export default connect(mapStateToProps)(CreateVehicle);
+export default connect(mapStateToProps)(FormDriver);

@@ -3,12 +3,12 @@ import { Table, Button } from "reactstrap";
 import * as actions from "./redux/actions";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
-import FormVehicle from "../create/FormVehicle";
-import DeleteVehicle from "../delete/DeleteVehicle";
+import FormDriver from "../create/FormDriver";
+import DeleteDriver from "../delete/DeleteDriver";
 
 import "./styles.css";
 
-class Vehicles extends Component {
+class Drivers extends Component {
   constructor(props) {
     super();
     this.state = {
@@ -17,7 +17,7 @@ class Vehicles extends Component {
     };
     this.hanldeCreateSuccess = this.hanldeCreateSuccess.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this);
+    this.handleDeleteDriver = this.handleDeleteDriver.bind(this);
   }
 
   componentWillMount() {
@@ -56,7 +56,7 @@ class Vehicles extends Component {
     });
   }
 
-  handleDeleteVehicle(vehicle) {
+  handleDeleteDriver(vehicle) {
     this.setState({
       remove: vehicle._id
     });
@@ -98,7 +98,6 @@ class Vehicles extends Component {
                   <td>
                     <Button
                       color="primary"
-                      outline
                       onClick={() => {
                         this.handleOpenModal(value);
                       }}
@@ -109,9 +108,8 @@ class Vehicles extends Component {
                   <td>
                     <Button
                       color="danger"
-                      outline
                       onClick={() => {
-                        this.handleDeleteVehicle(value);
+                        this.handleDeleteDriver(value);
                       }}
                     >
                       <i className="far fa-trash-alt" />
@@ -125,24 +123,24 @@ class Vehicles extends Component {
 
         {profile && (
           <div className="row btn-update">
-            <FormVehicle vehicle={profile} created={this.hanldeCreateSuccess} />
+            <FormDriver vehicle={profile} created={this.hanldeCreateSuccess} />
           </div>
         )}
 
         {!profile && (
           <div className="row btn-update">
-            <FormVehicle created={this.hanldeCreateSuccess} />
+            <FormDriver created={this.hanldeCreateSuccess} />
           </div>
         )}
 
-        {remove && <DeleteVehicle id={remove} deleted={this.hanldeCreateSuccess} />}
+        {remove && <DeleteDriver id={remove} deleted={this.hanldeCreateSuccess} />}
       </div>
     );
   }
 }
 
 const mapStatetoProps = store => {
-  const { list } = store.vehicles;
+  const { list } = store.drivers;
   return {
     data: list.data ? list.data : [],
     requesting: list.requesting,
@@ -151,4 +149,4 @@ const mapStatetoProps = store => {
   };
 };
 
-export default connect(mapStatetoProps)(Vehicles);
+export default connect(mapStatetoProps)(Drivers);

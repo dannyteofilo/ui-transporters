@@ -99,13 +99,13 @@ class Register extends Component {
 }
 
 export default connect((store) => {
-    const { login } = store;
+    const { data } = store.login;
 
     return {
-        requesting: login.requesting,
-        error: login.error,
-        response: login.response,
-        token: login.token
+        requesting: data.requesting,
+        error: data.error,
+        response: data.response,
+        token: data.token
     }
 })(Register);
 
